@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Wir ziehen um!</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: Roboto;
+      }
+      #main {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #0069B3;
+      }
+      #main h1 {
+        color: #92007B;
+        font-size: 80px;
+        margin: 40px 0 0 0;
+      }
+      #main h2 {
+        margin: 0;
+      }
+      .inner {
+        height: 100vh;
+        background-color: white;
+        padding: 0 50px;
+      }
+      .img-overlay {
+        position: relative;
+        box-shadow: 1px 1px 5px #888;
+      }
+      #sign {
+        display: block;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+      #new-address {
+        font-size: 30px;
+        margin-bottom: 20px;
+      }
+      #new-address .address {
+        font-weight: bold;
+      }
+      #moving-date {
+        padding: 30px 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      #outer-calendar {
+        width: 65px;
+        height: 80px;
+        border-radius: 5px;
+        border: 5px solid #333;
+        box-shadow: 1px 1px 5px #888;
+        margin-right: 80px;
+      }
+      #top-calendar {
+        height: 30px;
+        font-size: 20px;
+        color: white;
+        text-align: center;
+        background-color: #0069B3;
+      }
+      #bottom-calendar {
+        font-size: 40px;
+        color: #333;
+        text-align: center;
+        font-weight: bold;
+      }
+      #counter {
+        width: 320px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+      }
+      #counter *.display-group {
+        display: flex;
+        flex-flow: column nowrap;
+        text-align: center;
+      }
+      .segment {
+        fill: crimson;
+      }
+      .segment.off {
+        opacity: 0.2;
+      }
+      .display {
+        padding: 10px 5px;
+        margin: 0 5px;
+        background-color: #333;
+        box-shadow: 1px 1px 5px #888;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main">
+      <div class="inner">
+        <h1>Wir ziehen um!</h1>
+        <section id="new-address">
+          <span>in den</span>
+          <span class="address">Werdauer Weg 27, 10829 Berlin</span>
+        </section>
+        <a href="https://www.google.com/maps/dir/B%C3%BCrgerstra%C3%9Fe+53,+12347+Berlin/Werdauer+Weg+27,+10829+Berlin/@52.4698996,13.3757243,14z/data=!4m14!4m13!1m5!1m1!1s0x47a84f82984bceb9:0x31df8644bd5c309f!2m2!1d13.4388268!2d52.4613953!1m5!1m1!1s0x47a850727609c5dd:0xafff9d6ef258fc6!2m2!1d13.3472975!2d52.47362!3e0">
+          <div class="img-overlay">
+            <img src="map.png" />
+            <img id="sign" src="sign.svg" width="175px" height="100px" />
+          </div>
+        </a>
+        <section id="moving-date">
+          <div id="outer-calendar">
+            <div id="top-calendar">
+              März
+            </div>
+            <div id="bottom-calendar">
+              2
+            </div>
+          </div>
+          <div id="counter">
+            <div id="days-display" class="display-group">
+              Tage
+            </div>
+            <div id="hours-display" class="display-group">
+              Stunden
+            </div>
+            <div id="mins-display" class="display-group">
+              Minuten
+            </div>
+            <div id="secs-display" class="display-group">
+              Sekunden
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="text/javascript">
+      const svgNS = 'http://www.w3.org/2000/svg'
+      const createSegment = (d, t = '') => {
+        const s = document.createElementNS(svgNS, 'path')
+        s.setAttribute('d', d)
+        s.setAttribute('transform', t)
+        s.classList.add('segment')
+        s.classList.add('off')
+        return s
+      }
+      class Digit {
+        constructor(number) {
+          const p = 3
+          const op = p/(2**(1/2))
+          const w = 5
+          const tw = 25
+          const th = 40.5
+          const dh = `M${op},0 L${w + op},${w} ${tw - w - op},${w} ${tw - op},0 z`
+          const dv = `M0,${op} L0,${th/2 - p/2} l${w/2},${0} l${w/2},${-w/2} L${w},${op + w} z`
+          const dm = `M${w + p},${th/2 - w/2} L${tw - w - p},${th/2 - w/2} l${w/2},${w/2} l${-w/2},${w/2} L${w + p},${th/2 + w/2} l${-w/2},${-w/2} z`
+          this.root = document.createElementNS(svgNS, 'svg')
+          this.root.setAttribute('width', `${tw}px`)
+          this.root.setAttribute('height', `${th}px`)
+          this.root.setAttribute('viewBox', `0 0 ${tw} ${th}`)
+          const s1 = createSegment(dh)
+          const s2 = createSegment(dv, `translate(0, ${th/2}) scale(1, -1) rotate(180, ${tw/2}, ${th/4})`)
+          const s3 = createSegment(dv, `rotate(180, ${tw/2}, ${th/2})`)
+          const s4 = createSegment(dh, `rotate(180, ${tw/2}, ${th/2})`)
+          const s5 = createSegment(dv, `translate(0, ${th}) scale(1, -1)`)
+          const s6 = createSegment(dv)
+          const s7 = createSegment(dm)
+          this.root.append(s1)
+          this.root.append(s2)
+          this.root.append(s3)
+          this.root.append(s4)
+          this.root.append(s5)
+          this.root.append(s6)
+          this.root.append(s7)
+          this.segments = [s1, s2, s3, s4, s5, s6, s7]
+          this.number = number
+        }
+        set number (n) {
+          const numbers = [
+          [1, 1, 1, 1, 1, 1, 0],
+          [0, 1, 1, 0, 0, 0, 0],
+          [1, 1, 0, 1, 1, 0, 1],
+          [1, 1, 1, 1, 0, 0, 1],
+          [0, 1, 1, 0, 0, 1, 1],
+          [1, 0, 1, 1, 0, 1, 1],
+          [1, 0, 1, 1, 1, 1, 1],
+          [1, 1, 1, 0, 0, 0, 0],
+          [1, 1, 1, 1, 1, 1, 1],
+          [1, 1, 1, 1, 0, 1, 1],
+          [0, 0, 0, 0, 0, 0, 0],
+          ]
+          numbers[n].forEach((item, index) => {
+            if (item === 1) {
+              this.segments[index].classList.remove('off')
+            } else {
+              this.segments[index].classList.add('off')
+            }
+          })
+
+        }
+      }
+      class NumberDisplay {
+        constructor (number) {
+          this.root = document.createElement('div')
+          this.root.classList.add('display')
+          this.root.setAttribute('style', 'display: flex; flex-direction: row-reverse;')
+          this.digits = []
+          for (let i=0; i<number; i++) {
+            let d = new Digit(10)
+            d.root.setAttribute('style', 'padding: 0 3px')
+            this.root.append(d.root)
+            this.digits.push(d)
+          }
+        }
+        set value (number) {
+          let currentNumber = number
+          this.digits.forEach(digit => {
+            digit.number = currentNumber%10
+            currentNumber = (currentNumber - currentNumber%10)/10
+          })
+        }
+      }
+      const getTime = () => {
+        const now = Date.now()
+        const targetTime = new Date(2020, 2, 2, 7, 0, 0)
+        const msDist = targetTime - now
+        let dist = Math.round(msDist/1000)
+        const secs = dist%60
+        dist = (dist - secs)/60
+        const mins = dist%60
+        dist = (dist - mins)/60
+        const hrs = dist%24
+        dist = (dist - hrs)/24
+        const days = dist
+        return {
+          secs,
+          mins,
+          hrs,
+          days
+        }
+      }
+      const daysDisplay = new NumberDisplay(2)
+      const hoursDisplay = new NumberDisplay(2)
+      const minsDisplay = new NumberDisplay(2)
+      const secsDisplay = new NumberDisplay(2)
+      window['days-display'].append(daysDisplay.root)
+      window['hours-display'].append(hoursDisplay.root)
+      window['mins-display'].append(minsDisplay.root)
+      window['secs-display'].append(secsDisplay.root)
+      setInterval(() => {
+        const time = getTime()
+        daysDisplay.value = time.days
+        hoursDisplay.value = time.hrs
+        minsDisplay.value = time.mins
+        secsDisplay.value = time.secs
+      }, 500)
+    </script>
+  </body>
+</html>
