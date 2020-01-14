@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Test</title>
+    <script type="module" src="kaskadi-digit.js"></script>
+    <script type="module" src="kaskadi-display.js"></script>
+  </head>
+  <body>
+    <kaskadi-digit number="0"></kaskadi-digit>
+    <kaskadi-display number="2" value="17"></kaskadi-display>
+    <script type="text/javascript">
+      const digit = document.querySelector('kaskadi-digit')
+      let number = Number(digit.getAttribute('number'))
+      setInterval(() => {
+        number++
+        if (number < 10) {
+          digit.number = number
+        } else {
+          number = -1
+        }
+      }, 500)
+    </script>
+  </body>
+</html>

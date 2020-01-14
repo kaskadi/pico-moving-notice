@@ -1,0 +1,59 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto;
+}
+#main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #0069B3;
+}
+#main h1 {
+  color: #92007B;
+  font-size: 80px;
+  margin: 40px 0 0 0;
+}
+#main h2 {
+  margin: 0;
+}
+.inner {
+  height: 100vh;
+  background-color: white;
+  padding: 0 50px;
+}
+.img-overlay {
+  position: relative;
+  box-shadow: 1px 1px 5px #888;
+}
+#sign {
+  display: block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+#new-address {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+#new-address .address {
+  font-weight: bold;
+}
+#moving-date {
+  padding: 30px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+#counter {
+  width: 320px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+#counter *.display-group {
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
+}
